@@ -2,12 +2,14 @@ package devilliers_214062813.nmu;
 
 import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 
 public class mapData {
 
     public ArrayList<String> listSuburbs;
     public HashSet<String> possibleSuburbs;
+
 
     public ArrayList<String> listType;
     public HashSet<String> possibleType;
@@ -130,4 +132,24 @@ public class mapData {
                 '}';
     }
 
+    public String toStringOrder() {
+        return "mapData{" +
+                " listArea=" + listArea +
+                ", listNoParking=" + listNoParking +
+                ", listNoBathRooms=" + listNoBathRooms +
+                ", listNoRooms=" + listNoRooms +
+                "listSuburbs=" + listSuburbs +
+                ", listType=" + listType+
+                '}';
+    }
+
+}
+
+class stringCompare implements Comparator<String>
+{
+    @Override
+    public int compare(String a, String b)
+    {
+        return a.compareTo(b);
+    }
 }

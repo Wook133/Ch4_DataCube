@@ -70,6 +70,7 @@ public class Data {
                 ", price=" + price +
                 '}';
     }
+
     public String toStringPrint(mapData map) {
         return "Data{" +
                 "suburb=" + map.listSuburbs.get(suburb) +
