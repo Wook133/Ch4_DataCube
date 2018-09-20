@@ -70,19 +70,19 @@ public class Main {
     {
         data.getRight().sort(new areaCompare());
         data.getRight().sort(new parkingCompare());
-        Integer[][] count = new Integer [data.getLeft().listArea.size()][data.getLeft().listNoRooms.size()];
-        Integer[][] sum = new Integer [data.getLeft().listArea.size()][data.getLeft().listNoRooms.size()];
+        int[][] count = new int [data.getLeft().listArea.size()][data.getLeft().listNoRooms.size()];
+        int[][] sum = new int [data.getLeft().listArea.size()][data.getLeft().listNoRooms.size()];
         ArrayList<Triple<Integer, Integer, Integer>> successPairs = new ArrayList<>();
 
 
-        for (int i = 0; i <= data.getLeft().listArea.size() - 1; i++)
+       /* for (int i = 0; i <= data.getLeft().listArea.size() - 1; i++)
         {
             for (int j = 0; j <= data.getLeft().listNoRooms.size() - 1; j++)
             {
                 count[i][j] = 0;
                 sum[i][j] = 0;
             }
-        }
+        }*/
         for (Data d : data.getRight()) {
             count[d.area][d.noroom] =count[d.area][d.noroom] + 1;
             sum[d.area][d.noroom] = sum[d.area][d.noroom] + data.getLeft().listPrice.get(d.price);
@@ -103,6 +103,7 @@ public class Main {
           //  System.out.println();
         }
 
+        //Display Results
         for (Triple<Integer, Integer, Integer> s : successPairs)
         {
             double davg = s.getRight()/(count[s.getLeft()][s.getMiddle()]*1.0);
