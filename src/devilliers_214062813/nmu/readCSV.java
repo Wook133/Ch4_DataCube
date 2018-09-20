@@ -3,6 +3,8 @@ package devilliers_214062813.nmu;
 import org.apache.commons.lang3.tuple.Pair;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class readCSV {
@@ -67,6 +69,22 @@ public class readCSV {
 
         Pair<mapData, ArrayList<Data>> output = Pair.of(map, data);
         return output;
+    }
+
+    public static void writeCsvFile(String fileName, String s) throws IOException {
+        FileWriter fileWriter = null;
+        try
+        {
+            fileWriter = new FileWriter(fileName, true);
+            fileWriter.append(NEW_LINE_SEPARATOR);
+            fileWriter.append(s);
+            fileWriter.flush();
+            fileWriter.close();
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+        }
     }
 
 
