@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+import org.javatuples.Quartet;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -38,14 +39,22 @@ public class Main {
         Integer maxSizeSuburbTypeArea = curmap.listSuburbs.size() * curmap.listType.size() * curmap.listArea.size();
         System.out.println("Apex = " + maxSizeApex);
         q1(data);
+        //0 area
+        //1 parking
+        //2 bathrooms
+        //3 rooms
+        //4 suburb
+        //5 type
+        //6 price
 
         System.out.println("<nummber of rooms, area> = " + maxSizeNoRoomsArea);
-        q2(data, 10);
-        q2D(gmap, rd, 10, 2, 5, curmap);
-        /*System.out.println("<number of bathrooms, number of parking areas> = " + maxSizeNoBathRoomsParkingArea);
-        q3(data, 100);
+        //q2(data, 10);
+        q2D(gmap, rd, 10, 0, 3, curmap);
+        System.out.println("<number of bathrooms, number of parking areas> = " + maxSizeNoBathRoomsParkingArea);
+       // q3(data, 10);
+       // q2D(gmap, rd, 10, 3, 4, curmap);
         System.out.println("<suburb, residence type, area> = " + maxSizeSuburbTypeArea);
-        System.out.println(curmap.listArea.size());*/
+        System.out.println(curmap.listArea.size());
 
 
         listData.sort(new areaCompare());
@@ -74,7 +83,7 @@ public class Main {
         System.out.println("________________________");
         System.out.println("Apex");
         System.out.println("Cells = 1");
-        System.out.println("AVG Apex = " + dave);
+        System.out.println("(*, *, *, *, *, " + dave + ")");
     }
     public static void q2(Pair<mapData, ArrayList<Data>> data, int minThresh)
     {
@@ -203,47 +212,180 @@ public class Main {
         //Display Results
         for (Triple<Integer, Integer, Integer> s : successPairs)
         {
+            System.out.print("(");
+            for (int n = 0; n <= a -1; n++)
+            {
+                System.out.print("*, ");
+            }
             double davg = s.getRight()/(count[s.getLeft()][s.getMiddle()]*1.0);
+
             switch (a)
             {
                 case 0 :
                 {
-                    System.out.print(fullmap.listSuburbs.get(s.getLeft()));
+                    System.out.print(fullmap.listSuburbs.get(s.getLeft()) + ", ");
                 }
                 break;
                 case 1 :
                 {
-                    System.out.print(fullmap.listType.get(s.getLeft()));
+                    System.out.print(fullmap.listType.get(s.getLeft()) + ", ");
                 }
                 break;
                 case 2 :
                 {
-                    System.out.print(fullmap.listNoRooms.get(s.getLeft()));
+                    System.out.print(fullmap.listNoRooms.get(s.getLeft()) + ", ");
                 }
                 break;
                 case 3 :
                 {
-                    System.out.print(fullmap.listNoBathRooms.get(s.getLeft()));
+                    System.out.print(fullmap.listNoBathRooms.get(s.getLeft()) + ", ");
                 }
                 break;
                 case 4 :
                 {
-                    System.out.print(fullmap.listNoParking.get(s.getLeft()));
+                    System.out.print(fullmap.listNoParking.get(s.getLeft()) + ", ");
                 }
                 break;
                 case 5 :
                 {
-                    System.out.print(fullmap.listArea.get(s.getLeft()));
+                    System.out.print(fullmap.listArea.get(s.getLeft()) + ", ");
                 }
                 break;
                 case 6 :
                 {
-                    System.out.print(fullmap.listPrice.get(s.getLeft()));
+                    System.out.print(fullmap.listPrice.get(s.getLeft()) + ", ");
                 }
                 break;
                 default :
                 {
-                    System.out.print(fullmap.listPrice.get(s.getLeft()));
+                    System.out.print(fullmap.listPrice.get(s.getLeft()) + ", ");
+                }
+                break;
+            }
+            for (int n = a+1; n <= b -1; n++)
+            {
+                System.out.print("*, ");
+            }
+            switch (b)
+            {
+                case 0 :
+                {
+                    System.out.print(fullmap.listSuburbs.get(s.getMiddle()) + ", ");
+                }
+                break;
+                case 1 :
+                {
+                    System.out.print(fullmap.listType.get(s.getMiddle()) + ", ");
+                }
+                break;
+                case 2 :
+                {
+                    System.out.print(fullmap.listNoRooms.get(s.getMiddle()) + ", ");
+                }
+                break;
+                case 3 :
+                {
+                    System.out.print(fullmap.listNoBathRooms.get(s.getMiddle()) + ", ");
+                }
+                break;
+                case 4 :
+                {
+                    System.out.print(fullmap.listNoParking.get(s.getMiddle()) + ", ");
+                }
+                break;
+                case 5 :
+                {
+                    System.out.print(fullmap.listArea.get(s.getMiddle()) + ", ");
+                }
+                break;
+                case 6 :
+                {
+                    System.out.print(fullmap.listPrice.get(s.getMiddle()) + ", ");
+                }
+                break;
+                default :
+                {
+                    System.out.print(fullmap.listPrice.get(s.getMiddle()) + ", ");
+                }
+                break;
+            }
+            for (int n = b+1; n <= 5; n++)
+            {
+                System.out.print("*, ");
+            }
+
+
+            System.out.print(" " + davg);
+            System.out.println(") " + "Count = " + count[s.getLeft()][s.getMiddle()]);
+        }
+        System.out.println("Greater than threshold " +icounter);
+    }
+
+    public static void q3D(generalMap map, ArrayList<rowdata> data, int minThresh, int a, int b, int c, mapData fullmap) {
+        int[][][] count = new int[map.map[a].length][map.map[b].length][map.map[c].length];
+        int[][][] sum = new int[map.map[a].length][map.map[b].length][map.map[c].length];
+        ArrayList<Quartet<Integer, Integer, Integer, Integer>> successPairs = new ArrayList<>();
+
+        for (rowdata d : data) {
+            count[d.d[a]][d.d[b]][d.d[c]] = count[d.d[a]][d.d[b]][d.d[c]] + 1;
+            sum[d.d[a]][d.d[b]][d.d[c]] = sum[d.d[a]][d.d[b]][d.d[c]] + fullmap.listPrice.get(d.d[6]);
+        }
+        int icounter = 0;
+        for (int x = 0; x <= map.map[a].length - 1; x++) {
+            for (int y = 0; y <= map.map[b].length - 1; y++) {
+                for (int z = 0; z <= map.map[c].length - 1; z++) {
+                    if (count[x][y][z] >= minThresh) {
+                        Quartet<Integer, Integer, Integer, Integer> position = new Quartet<Integer, Integer, Integer, Integer>(x, y, z, sum[x][y][z]);
+                        successPairs.add(position);
+                        icounter = icounter + 1;
+                    }
+                }
+            }
+        }
+
+        for (Quartet<Integer, Integer, Integer, Integer> s : successPairs)
+        {
+            double davg = s.getValue3()/((count[s.getValue0()][s.getValue1()][s.getValue2()])*1.0);
+            switch (a)
+            {
+                case 0 :
+                {
+                    System.out.print(fullmap.listSuburbs.get(s.getValue0()));
+                }
+                break;
+                case 1 :
+                {
+                    System.out.print(fullmap.listType.get(s.getValue0()));
+                }
+                break;
+                case 2 :
+                {
+                    System.out.print(fullmap.listNoRooms.get(s.getValue0()));
+                }
+                break;
+                case 3 :
+                {
+                    System.out.print(fullmap.listNoBathRooms.get(s.getValue0()));
+                }
+                break;
+                case 4 :
+                {
+                    System.out.print(fullmap.listNoParking.get(s.getValue0()));
+                }
+                break;
+                case 5 :
+                {
+                    System.out.print(fullmap.listArea.get(s.getValue0()));
+                }
+                break;
+                case 6 :
+                {
+                    System.out.print(fullmap.listPrice.get(s.getValue0()));
+                }
+                break;
+                default :
+                {
+                    System.out.print(fullmap.listPrice.get(s.getValue0()));
                 }
                 break;
             }
@@ -252,54 +394,94 @@ public class Main {
             {
                 case 0 :
                 {
-                    System.out.print(fullmap.listSuburbs.get(s.getMiddle()));
+                    System.out.print(fullmap.listSuburbs.get(s.getValue1()));
                 }
                 break;
                 case 1 :
                 {
-                    System.out.print(fullmap.listType.get(s.getMiddle()));
+                    System.out.print(fullmap.listType.get(s.getValue1()));
                 }
                 break;
                 case 2 :
                 {
-                    System.out.print(fullmap.listNoRooms.get(s.getMiddle()));
+                    System.out.print(fullmap.listNoRooms.get(s.getValue1()));
                 }
                 break;
                 case 3 :
                 {
-                    System.out.print(fullmap.listNoBathRooms.get(s.getMiddle()));
+                    System.out.print(fullmap.listNoBathRooms.get(s.getValue1()));
                 }
                 break;
                 case 4 :
                 {
-                    System.out.print(fullmap.listNoParking.get(s.getMiddle()));
+                    System.out.print(fullmap.listNoParking.get(s.getValue1()));
                 }
                 break;
                 case 5 :
                 {
-                    System.out.print(fullmap.listArea.get(s.getMiddle()));
+                    System.out.print(fullmap.listArea.get(s.getValue1()));
                 }
                 break;
                 case 6 :
                 {
-                    System.out.print(fullmap.listPrice.get(s.getMiddle()));
+                    System.out.print(fullmap.listPrice.get(s.getValue1()));
                 }
                 break;
                 default :
                 {
-                    System.out.print(fullmap.listPrice.get(s.getMiddle()));
+                    System.out.print(fullmap.listPrice.get(s.getValue1()));
                 }
                 break;
             }
-            System.out.println(" (" + count[s.getLeft()][s.getMiddle()] + ")" + " = " + davg);
-            //a         //b
-            //System.out.println(data.getLeft().listArea.get(s.getLeft()) + " : " + data.getLeft().listNoRooms.get(s.getMiddle()) + " (" + count[s.getLeft()][s.getMiddle()] + ")" + " = " + davg);
+            System.out.print(" : ");
+            switch (c)
+            {
+                case 0 :
+                {
+                    System.out.print(fullmap.listSuburbs.get(s.getValue2()));
+                }
+                break;
+                case 1 :
+                {
+                    System.out.print(fullmap.listType.get(s.getValue2()));
+                }
+                break;
+                case 2 :
+                {
+                    System.out.print(fullmap.listNoRooms.get(s.getValue2()));
+                }
+                break;
+                case 3 :
+                {
+                    System.out.print(fullmap.listNoBathRooms.get(s.getValue2()));
+                }
+                break;
+                case 4 :
+                {
+                    System.out.print(fullmap.listNoParking.get(s.getValue2()));
+                }
+                break;
+                case 5 :
+                {
+                    System.out.print(fullmap.listArea.get(s.getValue2()));
+                }
+                break;
+                case 6 :
+                {
+                    System.out.print(fullmap.listPrice.get(s.getValue2()));
+                }
+                break;
+                default :
+                {
+                    System.out.print(fullmap.listPrice.get(s.getValue2()));
+                }
+                break;
+            }
+            System.out.println(" (" + count[s.getValue0()][s.getValue1()][s.getValue2()] + ")" + " = " + davg);
         }
         System.out.println("Greater than threshold " +icounter);
 
     }
-
-
 
 
 
