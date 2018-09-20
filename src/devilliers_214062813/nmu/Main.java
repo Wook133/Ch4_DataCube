@@ -17,8 +17,17 @@ public class Main {
         readCSV rc = new readCSV();
         ArrayList<Data> listData = new ArrayList<>();
         Pair<mapData, ArrayList<Data>> data = readCSV.READcsvfile("Source Data.csv");
+
         listData=data.getRight();
+
+        ArrayList<rowdata> rd = new ArrayList<>();
         mapData curmap = data.getLeft();
+        for (Data d : listData)
+        {
+            rd.add(new rowdata(d));
+        }
+        generalMap gmap = new generalMap(curmap);
+
         System.out.println();
         System.out.println(curmap);
         System.out.println();
@@ -32,10 +41,11 @@ public class Main {
 
         System.out.println("<nummber of rooms, area> = " + maxSizeNoRoomsArea);
         q2(data, 10);
-
-        System.out.println("<number of bathrooms, number of parking areas> = " + maxSizeNoBathRoomsParkingArea);
+        q2D(gmap, rd, 10, 2, 5, curmap);
+        /*System.out.println("<number of bathrooms, number of parking areas> = " + maxSizeNoBathRoomsParkingArea);
+        q3(data, 100);
         System.out.println("<suburb, residence type, area> = " + maxSizeSuburbTypeArea);
-        System.out.println(curmap.listArea.size());
+        System.out.println(curmap.listArea.size());*/
 
 
         listData.sort(new areaCompare());
@@ -68,8 +78,8 @@ public class Main {
     }
     public static void q2(Pair<mapData, ArrayList<Data>> data, int minThresh)
     {
+        data.getRight().sort(new roomsCompare());
         data.getRight().sort(new areaCompare());
-        data.getRight().sort(new parkingCompare());
         int[][] count = new int [data.getLeft().listArea.size()][data.getLeft().listNoRooms.size()];
         int[][] sum = new int [data.getLeft().listArea.size()][data.getLeft().listNoRooms.size()];
         ArrayList<Triple<Integer, Integer, Integer>> successPairs = new ArrayList<>();
@@ -130,8 +140,164 @@ public class Main {
     }
 
 
+    public static void q3(Pair<mapData, ArrayList<Data>> data, int minThresh)
+    {
+        data.getRight().sort(new bathCompare());
+        data.getRight().sort(new parkingCompare());
+        int[][] count = new int [data.getLeft().listNoBathRooms.size()][data.getLeft().listNoParking.size()];
+        int[][] sum = new int [data.getLeft().listNoBathRooms.size()][data.getLeft().listNoParking.size()];
+        ArrayList<Triple<Integer, Integer, Integer>> successPairs = new ArrayList<>();
 
+        for (Data d : data.getRight()) {
+            count[d.nobaths][d.noparking] =count[d.nobaths][d.noparking] + 1;
+            sum[d.nobaths][d.noparking] = sum[d.nobaths][d.noparking] + data.getLeft().listPrice.get(d.price);
+        }
+        int icounter = 0;
+        for (int x = 0; x <= data.getLeft().listNoBathRooms.size() - 1; x ++)
+        {
+            for (int y = 0; y <= data.getLeft().listNoParking.size() - 1; y++)
+            {
+                if (count[x][y] >= minThresh)
+                {
+                    ImmutableTriple<Integer, Integer, Integer> position = new ImmutableTriple<Integer, Integer, Integer>(x, y, sum[x][y]);
+                    successPairs.add(position);
+                    icounter = icounter + 1;
+                }
+            }
+        }
 
+        //Display Results
+        for (Triple<Integer, Integer, Integer> s : successPairs)
+        {
+            double davg = s.getRight()/(count[s.getLeft()][s.getMiddle()]*1.0);
+            System.out.println(data.getLeft().listNoBathRooms.get(s.getLeft()) + " : " + data.getLeft().listNoParking.get(s.getMiddle()) + " (" + count[s.getLeft()][s.getMiddle()] + ")" + " = " + davg);
+        }
+        System.out.println("Greater than threshold " +icounter);
+
+    }
+
+    public static void q2D(generalMap map, ArrayList<rowdata> data, int minThresh, int a, int b, mapData fullmap)
+    {
+        int[][] count = new int [map.map[a].length][map.map[b].length];
+        int[][] sum = new int [map.map[a].length][map.map[b].length];
+        ArrayList<Triple<Integer, Integer, Integer>> successPairs = new ArrayList<>();
+
+        for (rowdata d : data) {
+            count[d.d[a]][d.d[b]] =count[d.d[a]][d.d[b]] + 1;
+            sum[d.d[a]][d.d[b]] = sum[d.d[a]][d.d[b]] + fullmap.listPrice.get(d.d[6]);
+        }
+        int icounter = 0;
+        for (int x = 0; x <= map.map[a].length - 1; x ++)
+        {
+            for (int y = 0; y <= map.map[b].length - 1; y++)
+            {
+                if (count[x][y] >= minThresh)
+                {
+                    ImmutableTriple<Integer, Integer, Integer> position = new ImmutableTriple<Integer, Integer, Integer>(x, y, sum[x][y]);
+                    successPairs.add(position);
+                    icounter = icounter + 1;
+                }
+            }
+        }
+
+        //Display Results
+        for (Triple<Integer, Integer, Integer> s : successPairs)
+        {
+            double davg = s.getRight()/(count[s.getLeft()][s.getMiddle()]*1.0);
+            switch (a)
+            {
+                case 0 :
+                {
+                    System.out.print(fullmap.listSuburbs.get(s.getLeft()));
+                }
+                break;
+                case 1 :
+                {
+                    System.out.print(fullmap.listType.get(s.getLeft()));
+                }
+                break;
+                case 2 :
+                {
+                    System.out.print(fullmap.listNoRooms.get(s.getLeft()));
+                }
+                break;
+                case 3 :
+                {
+                    System.out.print(fullmap.listNoBathRooms.get(s.getLeft()));
+                }
+                break;
+                case 4 :
+                {
+                    System.out.print(fullmap.listNoParking.get(s.getLeft()));
+                }
+                break;
+                case 5 :
+                {
+                    System.out.print(fullmap.listArea.get(s.getLeft()));
+                }
+                break;
+                case 6 :
+                {
+                    System.out.print(fullmap.listPrice.get(s.getLeft()));
+                }
+                break;
+                default :
+                {
+                    System.out.print(fullmap.listPrice.get(s.getLeft()));
+                }
+                break;
+            }
+            System.out.print(" : ");
+            switch (b)
+            {
+                case 0 :
+                {
+                    System.out.print(fullmap.listSuburbs.get(s.getMiddle()));
+                }
+                break;
+                case 1 :
+                {
+                    System.out.print(fullmap.listType.get(s.getMiddle()));
+                }
+                break;
+                case 2 :
+                {
+                    System.out.print(fullmap.listNoRooms.get(s.getMiddle()));
+                }
+                break;
+                case 3 :
+                {
+                    System.out.print(fullmap.listNoBathRooms.get(s.getMiddle()));
+                }
+                break;
+                case 4 :
+                {
+                    System.out.print(fullmap.listNoParking.get(s.getMiddle()));
+                }
+                break;
+                case 5 :
+                {
+                    System.out.print(fullmap.listArea.get(s.getMiddle()));
+                }
+                break;
+                case 6 :
+                {
+                    System.out.print(fullmap.listPrice.get(s.getMiddle()));
+                }
+                break;
+                default :
+                {
+                    System.out.print(fullmap.listPrice.get(s.getMiddle()));
+                }
+                break;
+            }
+            System.out.println(" (" + count[s.getLeft()][s.getMiddle()] + ")" + " = " + davg);
+            //a         //b
+            //System.out.println(data.getLeft().listArea.get(s.getLeft()) + " : " + data.getLeft().listNoRooms.get(s.getMiddle()) + " (" + count[s.getLeft()][s.getMiddle()] + ")" + " = " + davg);
+        }
+        System.out.println("Greater than threshold " +icounter);
+
+    }
 
 
 
